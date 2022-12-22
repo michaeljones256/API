@@ -5,6 +5,10 @@ import (
 	"fmt"
 )
 
+type Database struct {
+	db *sql.DB
+}
+
 const (
 	DB_USER     = "postgres"
 	DB_PASSWORD = "easy123"
@@ -14,20 +18,18 @@ const (
 // easy123 db master
 // same for invidual servers
 // using pgadmin
-func Connect() (*sql.DB, error) {
+func Connect() (*Database, error) {
 	dbinfo := fmt.Sprintf("user=%s password=%s dbname=%s sslmode=disable", DB_USER, DB_PASSWORD, DB_NAME)
 	db, err := sql.Open("postgres", dbinfo)
 
-	if err != nil {
-		return &sql.DB{}, err
-	}
-
-	return db, nil
+	return &Database{db: db}, err
 }
 
-func SelectAllTable(db *sql.DB) {
+func (database *Database) SelectAllTable() string {
 
-	rows, err := db.Query("SELECT * FROM testTable")
+	rows, err := database.db.Query("SELECT * FROM testTable")
+	var finalName string
+	var finalAge int
 	if err != nil {
 		for rows.Next() {
 			var name string
@@ -35,7 +37,17 @@ func SelectAllTable(db *sql.DB) {
 			err = rows.Scan(&name, &age)
 			fmt.Println(name)
 			fmt.Println(age)
+			finalName = name
+			finalAge = age
 		}
 	}
+	return fmt.Sprintf("%s and %d", finalName, finalAge)
 
+}
+
+func (database *Database) Insert(item interface{}) {
+	fmt.Println("this is an insert")
+}
+func (database *Database) Get(id int) {
+	fmt.Println("this is a get")
 }
