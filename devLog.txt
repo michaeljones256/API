@@ -2,3 +2,5 @@ Trying to create a rest API using go
 Installed postrgress and pgAdmin4 which can orchistrate that
 
 Following https://www.section.io/engineering-education/build-a-rest-api-application-using-golang-and-postgresql-database/
+
+Set up git repo

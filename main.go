@@ -1,32 +1,20 @@
 package main
 
 import (
+	"WebApp/api"
+	"WebApp/database"
 	"fmt"
-	"log"
-	"net/http"
-	"os"
-
-	"github.com/joho/godotenv"
 )
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("<h1>Hello World!</h1>"))
-}
-
 func main() {
-	err := godotenv.Load()
+	//db := database.SetupDB()
+	// database.SelectAllTable(db)
+
+	db, err := database.Connect()
 	if err != nil {
-		log.Println("Error loading .env file")
+		fmt.Println("Failed to connect to database")
 	}
+	server := api.NewServer(db)
+	server.StartServer()
 
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "3000"
-	}
-
-	mux := http.NewServeMux()
-
-	fmt.Println("APP running on localhost:3000")
-	mux.HandleFunc("/", indexHandler)
-	http.ListenAndServe(":"+port, mux)
 }
